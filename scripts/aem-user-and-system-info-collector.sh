@@ -21,24 +21,63 @@
 #######################################################################################
 
 function usage() {
-		  echo "---------------------"
-          echo "Usage: options" 1>&2
-		  echo "---------------------"
-          echo "-u : user login (default is prompted if online mode)" 1>&2
-          echo "-p : password" 1>&2
-          echo "-a : server url e.g. http://localhost:4502 (default is prompted if online mode)" 1>&2
-		  echo "-c : define server-url (a), login(u), password(p) and servername in tab delimited text-file for batch collection" 1>&2
-          echo "-t : take thread dumps" 1>&2
-          echo "-d : destination folder/directory (default 'server-info'-folder)" 1>&2
-          echo ""
-		  echo "---------------------"
-          echo "Sample Usage: "
-		  echo "---------------------"
-          echo "./aem-user-and-system-info-collector.sh  -u admin -p admin -a http://localhost:4502" 1>&2
-		  echo ""
-		  echo "./aem-user-and-system-info-collector.sh  -c file-containing-list-of-servers-and-credentials.tsv -d ./server_info" 1>&2
-          echo "---------------------"
-		  exit 1
+	echo "---------------------"
+	echo "Usage: options" 1>&2
+	echo "---------------------"
+	echo "-u : user login (default is prompted if online mode)" 1>&2
+	echo "-p : password" 1>&2
+	echo "-a : server url e.g. http://localhost:4502 (default is prompted if online mode)" 1>&2
+	echo "-c : define server-url (a), login(u), password(p) and servername in tab delimited text-file for batch collection" 1>&2
+	echo "-t : take thread dumps" 1>&2
+	echo "-d : destination folder/directory (default 'server-info'-folder)" 1>&2
+	echo ""
+	echo "---------------------"
+	echo "Sample Usage: "
+	echo "---------------------"
+	echo "./aem-user-and-system-info-collector.sh  -u admin -p admin -a http://localhost:4502" 1>&2
+	echo ""
+	echo "./aem-user-and-system-info-collector.sh  -c file-containing-list-of-servers-and-credentials.tsv -d ./server_info" 1>&2
+	echo "---------------------"
+	exit 1
+}
+
+# Get 'configuration-status' of server as ZIP
+function curlConfigurationStatus(){
+	echo "executing: "
+	echo "	curl -u $USER:$PASSWORD -O -J -k $DIRECTORY -k $SERVERURL/system/console/status-slinglogs/configuration-status.zip"
+	echo "	-O : Download"
+	echo "	-J : User File-Name used on Server"
+	echo "	-k : allow insecure SSL connections"
+	mkdir -p $DIRECTORY
+	cd $DIRECTORY
+	curl -u $USER:$PASS -O -J -k $SERVERURL/system/console/status-slinglogs/configuration-status.zip
+	cd - #go back to last dir "cd $OLDPWD"
+}
+
+# Collecting "bundles.json" for use in tools from http://www.aemstuff.com/ -> Tools
+function curlBundleJson(){
+	echo "executing: "
+	echo "	curl -u $USER:$PASSWORD -O -J -k $DIRECTORY -k $SERVERURL/system/console/bundles.json"
+	echo "	-O : Download"
+	echo "	-J : User File-Name used on Server"
+	echo "	-k : allow insecure SSL connections"
+	mkdir -p $DIRECTORY
+	cd $DIRECTORY
+	curl -u $USER:$PASS -O -J -k $SERVERURL/system/console/bundles.json
+	cd - #go back to last dir "cd $OLDPWD"
+}
+
+# Collecting "users.json" to be able to determine named-users
+function curlUsersJson(){
+	echo "executing: "
+	echo "	curl -u $USER:$PASSWORD -k -o $DIRECTORY/users.json $SERVERURL/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=5"
+	echo "	-O : Download"
+	echo "	-J : User File-Name used on Server"
+	echo "	-k : allow insecure SSL connections"
+	mkdir -p $DIRECTORY
+	cd $DIRECTORY
+	curl -u $USER:$PASS -k -o users.json $SERVERURL"/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=5"
+	cd - #go back to last dir "cd $OLDPWD"
 }
 
 
@@ -82,15 +121,9 @@ else
 	exit;
 fi
 
-# Get 'configuration-status' of server as ZIP
-echo "executing: "
-echo "	curl -u $USER:$PASSWORD -O -J -P $DIRECTORY -k $SERVERURL/system/console/status-slinglogs/configuration-status.zip"
-echo "	-O : Download"
-echo "	-J : User File-Name used on Server"
-echo "	-d : Folder to save file in"
-echo "	-k : allow insecure SSL connections"
-curl -u $USER:$PASS -O -J -k $SERVERURL/system/console/status-slinglogs/configuration-status.zip
+curlConfigurationStatus
+curlBundleJson
+curlUsersJson
 
 
-# Collecting "bundles.json" for use in tools from http://www.aemstuff.com/ -> Tools
-curl -u $USER:$PASS -O -J -P $DIRECTORY -k $SERVERURL/system/console/bundles.json
+
