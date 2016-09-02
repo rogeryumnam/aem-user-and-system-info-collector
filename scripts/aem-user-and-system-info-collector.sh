@@ -159,6 +159,7 @@ else
 	exit;
 fi
 
+# returns AEM_VERSION
 getAemVersion
 
 curlConfigurationStatus
