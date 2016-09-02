@@ -41,8 +41,26 @@ function usage() {
 	exit 1
 }
 
+# Getting AEM version name
+function getAemVersion(){
+	# curl -u $USER:$PASS -k $SERVERURL/system/console/productinfo  
+	#	->  gets html with AEM version included
+	# grep "Adobe Experience Manager"  
+	#	-> returns only lines with "AEM" included
+	# awk -F'[()]' 'NR==5 {print $2}'  
+	#	-> gets text between round braces (version-numbers). There are two round braces, one is the license version number, the other the software version number.
+	#	-> due to removal of text we need to use "NR==5" (fifth line) to get the software version number.
+	AEM_VERSION=$(curl -u $USER:$PASS -k $SERVERURL/system/console/productinfo | grep "Adobe Experience Manager" | awk -F'[()]' 'NR==5 {print substr($2,0,5)}')
+	echo "-----------------------------"
+	echo "AEM VERSION: " $AEM_VERSION
+	echo "-----------------------------"
+}
+
 # Get 'configuration-status' of server as ZIP
 function curlConfigurationStatus(){
+	echo "-------------------------------------------"
+	echo "Get 'configuration-status' of server as ZIP"
+	echo "-------------------------------------------"
 	echo "executing: "
 	echo "	curl -u $USER:$PASSWORD -O -J -k $DIRECTORY -k $SERVERURL/system/console/status-slinglogs/configuration-status.zip"
 	echo "	-O : Download"
@@ -56,6 +74,9 @@ function curlConfigurationStatus(){
 
 # Collecting "bundles.json" for use in tools from http://www.aemstuff.com/ -> Tools
 function curlBundleJson(){
+	echo "-------------------------"
+	echo "Collecting 'bundles.json'"
+	echo "-------------------------"
 	echo "executing: "
 	echo "	curl -u $USER:$PASSWORD -O -J -k $DIRECTORY -k $SERVERURL/system/console/bundles.json"
 	echo "	-O : Download"
@@ -69,14 +90,31 @@ function curlBundleJson(){
 
 # Collecting "users.json" to be able to determine named-users
 function curlUsersJson(){
+	echo "-----------------------"
+	echo "Collecting 'users.json'"
+	echo "-----------------------"
 	echo "executing: "
 	echo "	curl -u $USER:$PASSWORD -k -o $DIRECTORY/users.json $SERVERURL/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=5"
-	echo "	-O : Download"
-	echo "	-J : User File-Name used on Server"
+	echo "	-o : Download directory"
 	echo "	-k : allow insecure SSL connections"
 	mkdir -p $DIRECTORY
 	cd $DIRECTORY
 	curl -u $USER:$PASS -k -o users.json $SERVERURL"/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=5"
+	cd - #go back to last dir "cd $OLDPWD"
+}
+
+# Collecting "indexes.json" to be able to check all indexes (Lucene indexes, OAK indexes)
+function curlIndexesJson(){
+	echo "------------------------"
+	echo "Collecting 'indexes.json'"
+	echo "------------------------"
+	echo "executing: "
+	echo "	curl -u $USER:$PASSWORD -k -o $DIRECTORY/users.json $SERVERURL/oak:index.tidy.-1.json"
+	echo "	-o : Download directory"
+	echo "	-k : allow insecure SSL connections"
+	mkdir -p $DIRECTORY
+	cd $DIRECTORY
+	curl -u $USER:$PASS -k -o indexes.json $SERVERURL"/oak:index.tidy.-1.json"
 	cd - #go back to last dir "cd $OLDPWD"
 }
 
@@ -121,9 +159,16 @@ else
 	exit;
 fi
 
+getAemVersion
+
 curlConfigurationStatus
 curlBundleJson
 curlUsersJson
+
+if [[ $AEM_VERSION == 6.* ]]; then 
+	curlIndexesJson
+fi
+
 
 
 
