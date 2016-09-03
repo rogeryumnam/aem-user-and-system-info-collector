@@ -15,4 +15,3 @@ A tool / shell-script to collect infos from several AEM instances. These infos i
 ./aem-user-and-system-info-collector.sh  -u admin -p admin -a http://localhost:4502  
 
 ./aem-user-and-system-info-collector.sh  -c file-containing-list-of-servers-and-credentials.tsv -d ./server_info
--
