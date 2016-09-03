@@ -1,0 +1,1131 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "jcr:mixinTypes": ["rep:AccessControllable"],
+  "cqCloudServiceConfig": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:cloudserviceconfig"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqMaster": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:master"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "workflowDataLucene": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "compatVersion": 2,
+    "name": "workflow",
+    "type": "lucene",
+    "async": "async",
+    "reindex": false,
+    "reindexCount": 1,
+    "indexRules": {
+      "jcr:primaryType": "nt:unstructured",
+      "granite:InboxItem": {
+        "jcr:primaryType": "nt:unstructured",
+        "properties": {
+          "jcr:primaryType": "nt:unstructured",
+          "startTime": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "startTime",
+            "type": "Date"
+            },
+          "assignee": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "name": "assignee",
+            "type": "String"
+            },
+          "status": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "name": "status",
+            "type": "String"
+            }
+          }
+        },
+      "cq:Workflow": {
+        "jcr:primaryType": "nt:unstructured",
+        "properties": {
+          "jcr:primaryType": "nt:unstructured",
+          "startTime": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "startTime",
+            "type": "Date"
+            },
+          "endTime": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "endTime",
+            "type": "Date"
+            },
+          "status": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "name": "status",
+            "type": "String"
+            }
+          }
+        }
+      }
+    },
+  "jcrLanguage": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["jcr:language"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "event.job.topic": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["event.job.topic"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "extensionType": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["extensionType"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "slingeventEventId": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["slingevent:eventId"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "containeeInstanceId": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["containeeInstanceId"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "active": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["active"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "processingProfile": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["processingProfile"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "counter": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "type": "counter",
+    "async": "async",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "authorizables": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "compatVersion": 2,
+    "name": "authorizables",
+    "type": "lucene",
+    "async": "async",
+    "reindex": false,
+    "reindexCount": 1,
+    "aggregates": {
+      "jcr:primaryType": "nt:unstructured",
+      "rep:Authorizable": {
+        "jcr:primaryType": "nt:unstructured",
+        "include0": {
+          "jcr:primaryType": "nt:unstructured",
+          "relativeNode": false,
+          "path": "profile"
+          }
+        }
+      },
+    "indexRules": {
+      "jcr:primaryType": "nt:unstructured",
+      "rep:Authorizable": {
+        "jcr:primaryType": "nt:unstructured",
+        "properties": {
+          "jcr:primaryType": "nt:unstructured",
+          "repPrincipalName": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "analyzed": true,
+            "name": "rep:principalName",
+            "type": "String"
+            },
+          "repAuthorizableId": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "analyzed": true,
+            "name": "rep:authorizableId",
+            "type": "String"
+            },
+          "profileEmail": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "analyzed": true,
+            "name": "profile/email",
+            "type": "String"
+            },
+          "profileGivenName": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "analyzed": true,
+            "name": "profile/givenName",
+            "type": "String"
+            },
+          "profileFamilyName": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "analyzed": true,
+            "name": "profile/familyName",
+            "type": "String"
+            },
+          "profileGender": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "analyzed": true,
+            "name": "profile/gender",
+            "type": "String"
+            }
+          }
+        }
+      }
+    },
+  "cqDefaultFormFor": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:defaultFormFor"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "slingResourceSuperType": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["sling:resourceSuperType"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqLastReplicationAction": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:lastReplicationAction"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqCugEnabled": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:cugEnabled"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "damScene7ID": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["dam:scene7ID"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqAcUUID": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:acUUID"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "campaignpath": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["campaignpath"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "subType": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["subType"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "damS7watch": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["dam:s7Swatch"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "acPrincipalName": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "declaringNodeTypes": [
+      "rep:DenyACE",
+      "rep:GrantACE",
+      "rep:ACE"
+    ],
+    "propertyNames": ["rep:principalName"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "fpContentType": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["fpContentType"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqVariantFamily": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:variantFamily"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "uuid": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["jcr:uuid"],
+    "unique": true,
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "slingVanityPath": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["sling:vanityPath"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "jcrLockOwner": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["jcr:lockOwner"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "damAssetLucene": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "compatVersion": 2,
+    "type": "lucene",
+    "async": "async",
+    "evaluatePathRestrictions": true,
+    "reindex": false,
+    "reindexCount": 1,
+    "aggregates": {
+      "jcr:primaryType": "nt:unstructured",
+      "dam:Asset": {
+        "jcr:primaryType": "nt:unstructured",
+        "include0": {
+          "jcr:primaryType": "nt:unstructured",
+          "path": "jcr:content"
+          },
+        "include1": {
+          "jcr:primaryType": "nt:unstructured",
+          "path": "jcr:content/metadata"
+          },
+        "include2": {
+          "jcr:primaryType": "nt:unstructured",
+          "path": "jcr:content/metadata/*"
+          },
+        "include3": {
+          "jcr:primaryType": "nt:unstructured",
+          "path": "jcr:content/renditions"
+          },
+        "include4": {
+          "jcr:primaryType": "nt:unstructured",
+          "path": "jcr:content/renditions/original"
+          },
+        "include5": {
+          "jcr:primaryType": "nt:unstructured",
+          "path": "jcr:content/renditions/original/jcr:content"
+          },
+        "include6": {
+          "jcr:primaryType": "nt:unstructured",
+          "path": "jcr:content/comments"
+          },
+        "include7": {
+          "jcr:primaryType": "nt:unstructured",
+          "path": "jcr:content/comments/*"
+          }
+        }
+      },
+    "indexRules": {
+      "jcr:primaryType": "nt:unstructured",
+      "dam:Asset": {
+        "jcr:primaryType": "nt:unstructured",
+        "properties": {
+          "jcr:primaryType": "nt:unstructured",
+          "cqTags": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/cq:tags"
+            },
+          "dcFormat": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "analyzed": true,
+            "name": "jcr:content/metadata/dc:format"
+            },
+          "damStatus": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/dam:status"
+            },
+          "videoCodec": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/videoCodec"
+            },
+          "audioCodec": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/audioCodec"
+            },
+          "dcTitle": {
+            "jcr:primaryType": "nt:unstructured",
+            "nodeScopeIndex": true,
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/dc:title",
+            "boost": 2
+            },
+          "dcDescription": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/dc:description"
+            },
+          "xmpMMInstanceId": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/xmpMM:InstanceID"
+            },
+          "xmpMMDocumentId": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/xmpMM:DocumentID"
+            },
+          "damSha1": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/dam:sha1"
+            },
+          "hasValidMetadata": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/hasValidMetadata",
+            "type": "Boolean"
+            },
+          "videoBitrate": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/videoBitrate"
+            },
+          "audioBitRate": {
+            "jcr:primaryType": "nt:unstructured",
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/audioBitrate"
+            },
+          "jcrLastModified": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "jcr:content/jcr:lastModified",
+            "type": "Date"
+            },
+          "expirationDate": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/prism:expirationDate",
+            "type": "Date"
+            },
+          "onTime": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "jcr:content/onTime",
+            "type": "Date"
+            },
+          "offTime": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "jcr:content/offTime",
+            "type": "Date"
+            },
+          "damSize": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/dam:size",
+            "type": "Long"
+            },
+          "averageRating": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "jcr:content/averageRating",
+            "type": "Double"
+            },
+          "tiffImageWidth": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/tiff:ImageWidth",
+            "type": "Long"
+            },
+          "tiffImageLength": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "jcr:content/metadata/tiff:ImageLength",
+            "type": "Long"
+            }
+          }
+        }
+      }
+    },
+  "deviceIdentificationMode": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:deviceIdentificationMode"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "refExpired": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["refExpired"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "rep:policy": {
+    "jcr:primaryType": "rep:ACL",
+    "deny": {
+      "jcr:primaryType": "rep:DenyACE",
+      "rep:principalName": "everyone",
+      "rep:privileges": ["jcr:all"]
+      },
+    "allow": {
+      "jcr:primaryType": "rep:GrantACE",
+      "rep:principalName": "administrators",
+      "rep:privileges": ["jcr:all"]
+      }
+    },
+  "status": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["status"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqCloudServiceConfigs": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:cloudserviceconfigs"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "slingResources": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["sling:resources"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqPayloadPath": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "declaringNodeTypes": ["cq:Payload"],
+    "propertyNames": ["path"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "type": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["type"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "contentPath": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["contentPath"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "jcrFrozenMixinTypes": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["jcr:frozenMixinTypes"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqOwnerCanvasPage": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:ownerCanvasPage"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "slingResource": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["sling:resource"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "nodetype": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "declaringNodeTypes": [
+      "cq:Console",
+      "cq:PollConfig",
+      "sling:chunks",
+      "cq:ClientLibraryFolder",
+      "mix:language",
+      "granite:CloudsettingsConfigType",
+      "granite:Task",
+      "oak:QueryIndexDefinition",
+      "sling:VanityPath",
+      "cq:PollConfigFolder",
+      "cq:Template",
+      "cq:ExporterConfigFolder",
+      "sling:bgJobData",
+      "slingevent:TimedEvent",
+      "sling:MessageEntry",
+      "cq:ExporterConfig",
+      "cq:Component",
+      "cq:ContentSyncConfig",
+      "rep:User",
+      "slingevent:Job",
+      "cq:BlueprintSyncConfig",
+      "rep:Authorizable"
+    ],
+    "nodeTypeListDefined": true,
+    "propertyNames": [
+      "jcr:primaryType",
+      "jcr:mixinTypes"
+    ],
+    "type": "property",
+    "version": 1,
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqTemplate": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:template"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "ntBaseLucene": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "compatVersion": 2,
+    "name": "tags",
+    "type": "lucene",
+    "async": "async",
+    "reindex": false,
+    "reindexCount": 1,
+    "indexRules": {
+      "jcr:primaryType": "nt:unstructured",
+      "nt:base": {
+        "jcr:primaryType": "nt:unstructured",
+        "properties": {
+          "jcr:primaryType": "nt:unstructured",
+          "cqTags": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "name": "cq:tags",
+            "type": "String"
+            },
+          "offTime": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "offTime",
+            "type": "Date"
+            },
+          "onTime": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "onTime",
+            "type": "Date"
+            },
+          "analytics_pageviews": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "analytics_pageviews",
+            "type": "Long"
+            },
+          "analytics_visitors": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "analytics_visitors",
+            "type": "Long"
+            },
+          "analytics_averagetimespentonpage": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "analytics_averagetimespentonpage"
+            }
+          }
+        }
+      }
+    },
+  "verb": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["verb"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "reference": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "type": "reference",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqLastRolledoutBy": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:lastRolledoutBy"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqParentPath": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:parentPath"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "lockCreated": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["lock.created"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "principalName": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "declaringNodeTypes": ["rep:Authorizable"],
+    "propertyNames": ["rep:principalName"],
+    "unique": true,
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqTagLucene": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "compatVersion": 2,
+    "name": "cqTag",
+    "type": "lucene",
+    "async": "async",
+    "reindex": false,
+    "reindexCount": 1,
+    "indexRules": {
+      "jcr:primaryType": "nt:unstructured",
+      "cq:Tag": {
+        "jcr:primaryType": "nt:unstructured",
+        "properties": {
+          "jcr:primaryType": "nt:unstructured",
+          "jcrTitle": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "analyzed": true,
+            "name": "jcr:title",
+            "type": "String"
+            },
+          "cqMovedTo": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "name": "cq:movedTo",
+            "type": "String"
+            }
+          }
+        }
+      }
+    },
+  "lucene": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "includePropertyTypes": [
+      "String",
+      "Binary"
+    ],
+    "type": "lucene",
+    "async": "async",
+    "reindex": false,
+    "reindexCount": 1,
+    "indexRules": {
+      "jcr:primaryType": "nt:unstructured",
+      "nt:base": {
+        "jcr:primaryType": "nt:unstructured",
+        "includePropertyTypes": [
+          "String",
+          "Binary"
+        ],
+        "properties": {
+          "jcr:primaryType": "nt:unstructured",
+          "ontime": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "ontime",
+            "index": false
+            },
+          "cq:iscancelledforchildren": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:iscancelledforchildren",
+            "index": false
+            },
+          "cq:allowedtemplates": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:allowedtemplates",
+            "index": false
+            },
+          "cq:cugenabled": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:cugenabled",
+            "index": false
+            },
+          "cq:lastreplicationstatus": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastreplicationstatus",
+            "index": false
+            },
+          "cq:parentpath": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:parentpath",
+            "index": false
+            },
+          "analyticssnippet": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "analyticssnippet",
+            "index": false
+            },
+          "jcr:createdby": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "jcr:createdby",
+            "index": false
+            },
+          "offtime": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "offtime",
+            "index": false
+            },
+          "cq:lastmodifiedby": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastmodifiedby",
+            "index": false
+            },
+          "async-start": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "async-start",
+            "index": false
+            },
+          "runtimeid": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "runtimeid",
+            "index": false
+            },
+          "sling:alias": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "sling:alias",
+            "index": false
+            },
+          "cq:lastreplicatedby": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastreplicatedby",
+            "index": false
+            },
+          "cq:versioncomment": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:versioncomment",
+            "index": false
+            },
+          "cq:name": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:name",
+            "index": false
+            },
+          "cq:isdeep": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:isdeep",
+            "index": false
+            },
+          "cq:lastreplicationaction": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastreplicationaction",
+            "index": false
+            },
+          "leaderelectionid": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "leaderelectionid",
+            "index": false
+            },
+          "cq:childrenorder": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:childrenorder",
+            "index": false
+            },
+          "cq:designpath": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:designpath",
+            "index": false
+            },
+          "cq:template": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:template",
+            "index": false
+            },
+          "cq:cugprincipals": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:cugprincipals",
+            "index": false
+            },
+          "cq:trigger": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:trigger",
+            "index": false
+            },
+          "cq:segments": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:segments",
+            "index": false
+            },
+          "cq:cugrealm": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:cugrealm",
+            "index": false
+            },
+          "cq:lastrolledoutby": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastrolledoutby",
+            "index": false
+            },
+          "async-status": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "async-status",
+            "index": false
+            },
+          "cq:lastpublishedby": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastpublishedby",
+            "index": false
+            },
+          "cq:lastreplicated": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastreplicated",
+            "index": false
+            },
+          "sling:vanitypath": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "sling:vanitypath",
+            "index": false
+            },
+          "cq:lastpublished": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastpublished",
+            "index": false
+            },
+          "hideinnav": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "hideinnav",
+            "index": false
+            },
+          "cq:lastmodified": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastmodified",
+            "index": false
+            },
+          "cq:lastrolledout": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:lastrolledout",
+            "index": false
+            },
+          "jcr:lastmodifiedby": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "jcr:lastmodifiedby",
+            "index": false
+            },
+          "async-done": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "async-done",
+            "index": false
+            },
+          "analyticsprovider": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "analyticsprovider",
+            "index": false
+            },
+          "cq:siblingorder": {
+            "jcr:primaryType": "nt:unstructured",
+            "name": "cq:siblingorder",
+            "index": false
+            },
+          "prop0": {
+            "jcr:primaryType": "nt:unstructured",
+            "nodeScopeIndex": true,
+            "propertyIndex": false,
+            "analyzed": true,
+            "useInExcerpt": true,
+            "isRegexp": true,
+            "name": "^[^\\/]*$"
+            }
+          }
+        }
+      }
+    },
+  "guideComponentType": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["guideComponentType"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "slingAlias": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["sling:alias"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "damResolvedPath": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["dam:resolvedPath"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "authorizableId": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["rep:authorizableId"],
+    "unique": true,
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqPageLucene": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "compatVersion": 2,
+    "name": "cq:Page",
+    "type": "lucene",
+    "async": "async",
+    "reindex": false,
+    "reindexCount": 1,
+    "aggregates": {
+      "jcr:primaryType": "nt:unstructured",
+      "cq:Page": {
+        "jcr:primaryType": "nt:unstructured",
+        "include0": {
+          "jcr:primaryType": "nt:unstructured",
+          "relativeNode": true,
+          "path": "jcr:content"
+          }
+        },
+      "nt:file": {
+        "jcr:primaryType": "nt:unstructured",
+        "include0": {
+          "jcr:primaryType": "nt:unstructured",
+          "relativeNode": false,
+          "path": "jcr:content"
+          }
+        },
+      "cq:PageContent": {
+        "jcr:primaryType": "nt:unstructured",
+        "include0": {
+          "jcr:primaryType": "nt:unstructured",
+          "relativeNode": false,
+          "path": "*"
+          },
+        "include1": {
+          "jcr:primaryType": "nt:unstructured",
+          "relativeNode": false,
+          "path": "*/*"
+          },
+        "include2": {
+          "jcr:primaryType": "nt:unstructured",
+          "relativeNode": false,
+          "path": "*/*/*"
+          },
+        "include3": {
+          "jcr:primaryType": "nt:unstructured",
+          "relativeNode": false,
+          "path": "*/*/*/*"
+          }
+        }
+      },
+    "indexRules": {
+      "jcr:primaryType": "nt:unstructured",
+      "cq:Page": {
+        "jcr:primaryType": "nt:unstructured",
+        "properties": {
+          "jcr:primaryType": "nt:unstructured",
+          "cqLastModified": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": true,
+            "propertyIndex": true,
+            "name": "jcr:content/cq:lastModified",
+            "type": "Date"
+            },
+          "jcrTitle": {
+            "jcr:primaryType": "nt:unstructured",
+            "ordered": false,
+            "propertyIndex": true,
+            "name": "jcr:content/jcr:title",
+            "type": "String"
+            }
+          }
+        }
+      }
+    },
+  "slingResourceType": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["sling:resourceType"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "cqKeywords": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "propertyNames": ["cq:keywords"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    },
+  "damStatus": {
+    "jcr:primaryType": "oak:QueryIndexDefinition",
+    "entryCount": 9223372036854775807,
+    "propertyNames": ["dam:status"],
+    "type": "property",
+    "reindex": false,
+    "reindexCount": 1
+    }
+  }

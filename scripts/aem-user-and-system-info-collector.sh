@@ -240,6 +240,13 @@ else
 	echo "You need to install READ to continue"
 	exit 1
 fi
+# GREP
+if hash grep 2>/dev/null; then
+	echo "GREP installed"
+else
+	echo "You need to install GREP to continue"
+	exit 1
+fi
 echo "All necessary software installed."
 echo "	"
 
@@ -257,7 +264,7 @@ if [ "$FLG_C" = "TRUE" ]; then
 	[ ! -f "$PWD_ME/$CSV_FILE" ] && { echo "$CSV_FILE : file not found in path: $PWD_ME"; exit 99; }
 	
 	LINE=1
-	more "$PWD_ME/$CSV_FILE" | while IFS=',' read -r server_url servername username password
+	grep "" $PWD_ME/$CSV_FILE | while IFS=',' read -r server_url servername username password
 	do
 		echo "-----------------------------------------------"
 		echo "CSV line $LINE - Querying Server $servername."
