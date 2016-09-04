@@ -13,9 +13,9 @@
 # Sample Usage:
 # -------------
 # ONE SERVER:
-# ./aem-user-and-system-info-collector.sh  -u admin -p admin -a http://localhost:4502 
+# ./aem-user-and-system-info-collector.sh  -v -z -u admin -p admin -a http://localhost:4502 
 # MULTIPLE SERVER:
-# ./aem-user-and-system-info-collector.sh  -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
+# ./aem-user-and-system-info-collector.sh  -v -z -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
 #
 #
 # Credits:
@@ -32,16 +32,26 @@ function usage() {
 	echo "-a : server url e.g. http://localhost:4502 (default is prompted if online mode)" 1>&2
 	echo "-c : CSV-file: define server-url (-a), servername (-d), login(-u), password(-p)  for batch collection" 1>&2
 	echo "-d : destination folder/directory (default 'server-info'-folder)" 1>&2
-	echo "-v : more verbose output)" 1>&2
+	echo "-v : more verbose output" 1>&2
+	echo "-z : zip output" 1>&2
 	echo ""
 	echo "---------------------"
 	echo "Sample Usage: "
 	echo "---------------------"
 	echo "ONE SERVER:"
-	echo "./aem-user-and-system-info-collector.sh  -v -u admin -p admin -a http://localhost:4502 -d 'info_localhost_4502'" 1>&2
+	echo "./aem-user-and-system-info-collector.sh  -v -z -u admin -p admin -a http://localhost:4502 -d 'info_localhost_4502'" 1>&2
 	echo ""
 	echo "MULTIPLE SERVER:"
-	echo "./aem-user-and-system-info-collector.sh  -v -c example-list-of-servers.csv -d 'info_all_servers'" 1>&2
+	echo "./aem-user-and-system-info-collector.sh  -v -z -c example-list-of-servers.csv -d 'info_all_servers'" 1>&2
+	echo "---------------------"
+	echo ""
+	echo "---------------------"
+	echo "CSV File - Content"
+	echo "---------------------"
+	echo "http://localhost:4502,AEM_6.1_Server-Donald,admin,admin"  
+	echo "http://localhost:4504,AEM_5.6.1_Server-Dagobert,username,password"
+	echo "http://localhost:4506,AEM_6.2_Server-Goofy,wunsch,c3$6gbH+!" 
+	echo ""
 	echo "---------------------"
 	exit 1
 }
@@ -159,7 +169,7 @@ function curlGraniteQueryPerformance(){
 clear
 
 # --------------Get Parameters ---------------------------
-while getopts u:p:a:c:d:v OPT
+while getopts u:p:a:c:d:vz OPT
 
 do
   case $OPT in
@@ -169,6 +179,7 @@ do
 	"c" ) FLG_C="TRUE"  ; VALUE_C="$OPTARG" ;;
 	"d" ) FLG_D="TRUE"  ; VALUE_D="$OPTARG" ;;
 	"v" ) FLG_V="TRUE"  ;;
+	"z" ) FLG_Z="TRUE"  ;;
 	  * ) usage exit 1 ;;   
   esac
 done
@@ -210,8 +221,16 @@ else
   echo "OUTPUT: Non Verbose"
 fi
 
+if [ "$FLG_V" = "TRUE" ]; then
+  ZIP=true
+  echo "OUTPUT: ZIP files and folders."
+else
+  echo "OUTPUT: Do NOT ZIP files and folders."
+fi
+
 # ------------ Software checks -------------------
 # Check if necessary software is installed and available
+
 # CURL
 if hash curl 2>/dev/null; then
 	echo "CURL installed"
@@ -227,11 +246,13 @@ else
 	exit 1
 fi
 # ZIP
-if hash zip 2>/dev/null; then
-	echo "ZIP installed"
-else
-	echo "You need to install ZIP to continue"
-	exit 1
+if [ "$ZIP" = true ] ; then
+	if hash zip 2>/dev/null ; then
+		echo "ZIP installed"
+	else
+		echo "You need to install ZIP to continue"
+		exit 1
+	fi
 fi
 # READ
 if hash read 2>/dev/null; then
@@ -288,8 +309,10 @@ if [ "$FLG_C" = "TRUE" ]; then
 	cd $PWD_ME
 	
 	# ZIPing Folder
-	zip -q -r $DIRECTORY{.zip,}
-	rm -rf $DIRECTORY
+	if [ "$ZIP" = true ] ; then	
+		zip -q -r $DIRECTORY{.zip,}
+		rm -rf $DIRECTORY
+	fi
 	
 	exit 0
 fi 
@@ -320,8 +343,10 @@ fi
 cd - #go back to last dir "cd $OLDPWD"
 
 # ZIPing Folder
-zip -q -r $DIRECTORY{.zip,}
-rm -rf $DIRECTORY
+if [ "$ZIP" = true ] ; then	
+	zip -q -r $DIRECTORY{.zip,}
+	rm -rf $DIRECTORY
+fi
 
 
 echo "-------------------------------------------"
