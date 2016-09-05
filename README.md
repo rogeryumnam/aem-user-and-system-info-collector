@@ -6,18 +6,19 @@ A tool / shell-script to collect infos from several AEM instances. These infos i
 -u : user login (default is prompted if online mode)  
 -p : password  
 -a : server url e.g. http://localhost:4502 (default is prompted if online mode)  
--c : CSV-file: define server-url (-a), servername (-d), login(-u), password(-p)                                                                                                                                                                                                 for batch collection
+-c : CSV-file: define server-url (-a), servername (-d), login(-u), password(-p)                                                                                                                                                                                          for batch collection
 -d : destination folder/directory (default 'server-info'-folder)  
--v : more verbose output
--z : ZIP output (files and folders)
+-t : Connection Timeout (default 30sec)  
+-v : more verbose output  
+-z : ZIP output (files and folders)  
 
 ##Sample Usage:
 
 ONE SERVER:  
-./aem-user-and-system-info-collector.sh  -v -z -u admin -p admin -a http://localhost:4502 -d 'info_localhost_4502'  
+./aem-user-and-system-info-collector.sh  -v -z -t 10 -u admin -p admin -a http://localhost:4502 -d 'info_localhost_4502'  
 
 MULTIPLE SERVER:  
-./aem-user-and-system-info-collector.sh  -v -z -c example-list-of-servers.csv -d 'info_all_servers'  
+./aem-user-and-system-info-collector.sh  -v -z -t 10 -c example-list-of-servers.csv -d 'info_all_servers'  
 
 ##CSV File - Content
 
