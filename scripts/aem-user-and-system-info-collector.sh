@@ -13,10 +13,14 @@
 # Sample Usage:
 # -------------
 # ONE SERVER:
-# ./aem-user-and-system-info-collector.sh  -v -z -u admin -p admin -a http://localhost:4502 
+# ./aem-user-and-system-info-collector.sh  -v -z -t 10 -u admin -p admin -a http://localhost:4502 
 # MULTIPLE SERVER:
-# ./aem-user-and-system-info-collector.sh  -v -z -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
+# ./aem-user-and-system-info-collector.sh  -v -z -t 10 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
 #
+# ToDo:
+# -------------
+# add CURL option "-connect-timeout
+# 
 #
 # Credits:
 # This script is heavily inspired by the "system-info-collector.sh"-script by Takahito Kikuchi  tkikuchi@adobe.com.
@@ -32,6 +36,7 @@ function usage() {
 	echo "-a : server url e.g. http://localhost:4502 (default is prompted if online mode)" 1>&2
 	echo "-c : CSV-file: define server-url (-a), servername (-d), login(-u), password(-p)  for batch collection" 1>&2
 	echo "-d : destination folder/directory (default 'server-info'-folder)" 1>&2
+	echo "-t : Connection Timeout (default 30sec)" 1>&2
 	echo "-v : more verbose output" 1>&2
 	echo "-z : zip output" 1>&2
 	echo ""
@@ -39,10 +44,10 @@ function usage() {
 	echo "Sample Usage: "
 	echo "---------------------"
 	echo "ONE SERVER:"
-	echo "./aem-user-and-system-info-collector.sh  -v -z -u admin -p admin -a http://localhost:4502 -d 'info_localhost_4502'" 1>&2
+	echo "./aem-user-and-system-info-collector.sh  -v -z -t 10 -u admin -p admin -a http://localhost:4502 -d 'info_localhost_4502'" 1>&2
 	echo ""
 	echo "MULTIPLE SERVER:"
-	echo "./aem-user-and-system-info-collector.sh  -v -z -c example-list-of-servers.csv -d 'info_all_servers'" 1>&2
+	echo "./aem-user-and-system-info-collector.sh  -v -z -t 10 -c example-list-of-servers.csv -d 'info_all_servers'" 1>&2
 	echo "---------------------"
 	echo ""
 	echo "---------------------"
@@ -162,6 +167,30 @@ function curlGraniteQueryPerformance(){
 	curl -u $USER:$PASS -s -k -o graniteQueryPerformance.html $CURL_NON_VERBOSE $SERVERURL"/libs/granite/operations/content/diagnosis/tool.html/_granite_queryperformance" 
 }
 
+function checkTimeout ()  {
+	echo "------------------------"
+	echo "Checking for server timeout (set timeout: $TIMEOUT)"
+	echo "------------------------"
+	CURL_STATUS=$(curl -u $USER:$PASS -s -w %{http_code} --connect-timeout $TIMEOUT --output /dev/null $SERVERURL"/system/console/vmstat")
+}
+
+function countdown () {
+
+  for ((i=$1; i > 0;--i)) do
+	printf " $i "
+	sleep .25
+	printf "."
+	sleep .25
+	printf "."
+	sleep .25
+	printf "."
+	sleep .25
+  done
+  printf " GO!"
+  echo " "
+  sleep 1
+}
+
 #---------------------------------------------------------
 #---------      MAIN PROGRAMM      -----------------------
 #---------------------------------------------------------
@@ -169,7 +198,7 @@ function curlGraniteQueryPerformance(){
 clear
 
 # --------------Get Parameters ---------------------------
-while getopts u:p:a:c:d:vz OPT
+while getopts u:p:a:c:d:t:vz OPT
 
 do
   case $OPT in
@@ -178,6 +207,7 @@ do
 	"a" ) FLG_A="TRUE"  ; VALUE_A="$OPTARG" ;;
 	"c" ) FLG_C="TRUE"  ; VALUE_C="$OPTARG" ;;
 	"d" ) FLG_D="TRUE"  ; VALUE_D="$OPTARG" ;;
+	"t" ) FLG_T="TRUE"  ; VALUE_T="$OPTARG" ;;
 	"v" ) FLG_V="TRUE"  ;;
 	"z" ) FLG_Z="TRUE"  ;;
 	  * ) usage exit 1 ;;   
@@ -206,6 +236,13 @@ else
   usage
 fi
 
+
+if [ "$FLG_T" = "TRUE" ]; then
+  TIMEOUT=$VALUE_T
+else
+  TIMEOUT=30
+fi
+
 if [ "$FLG_D" = "TRUE" ]; then
   DIRECTORY=$VALUE_D
 else
@@ -221,7 +258,7 @@ else
   echo "OUTPUT: Non Verbose"
 fi
 
-if [ "$FLG_V" = "TRUE" ]; then
+if [ "$FLG_Z" = "TRUE" ]; then
   ZIP=true
   echo "OUTPUT: ZIP files and folders."
 else
@@ -287,6 +324,8 @@ if [ "$FLG_C" = "TRUE" ]; then
 	LINE=1
 	grep "" $PWD_ME/$CSV_FILE | while IFS=',' read -r server_url servername username password
 	do
+		# clearing screen
+		clear
 		echo "-----------------------------------------------"
 		echo "CSV line $LINE - Querying Server $servername."
 		echo "-----------------------------------------------"
@@ -296,12 +335,12 @@ if [ "$FLG_C" = "TRUE" ]; then
 		echo "Password : $password"
 		echo "-----------------------------------------------"
 		echo "Recursively executing: "
-		echo "$PWD_ME/$ME_SCRIPT_NAME $SCRIPT_VERBOSE -u $server_url -u $username -p $password -a $server_url."
+		echo "$PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE -u $server_url -u $username -p $password -a $server_url -t $TIMEOUT."
 		echo "-----------------------------------------------"
-		sleep 2
+		countdown 5
 		
 		# Recursively calling this script with Single Server parameters
-		($PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE  -u $username -p $password -d $servername -a $server_url )
+		($PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE -u $username -p $password -d $servername -a $server_url -t $TIMEOUT)
 		
 		((LINE++))
 	done
@@ -325,31 +364,41 @@ fi
 mkdir -p $DIRECTORY
 cd $DIRECTORY
 
-# This returns AEM_VERSION
-getAemVersion
 
-# This collects server information
-curlConfigurationStatus
-curlBundleJson
-curlCrxPackages
-curlUsersJson
+checkTimeout
 
-# This is only executed if >= AEM6
-if [[ $AEM_VERSION == 6.* ]]; then 
-	curlGraniteQueryPerformance
-	curlIndexesJson
+if [ "$CURL_STATUS" -eq "000" ] ; then
+	echo ""
+	echo "> Server did not respond within $TIMEOUT seconds. Please check if '$SERVERURL' is available."
+	echo ""
+	printf "> Continuing ..."
+	countdown 5
+else
+
+	# This returns AEM_VERSION
+	getAemVersion
+
+	# This collects server information
+	curlConfigurationStatus
+	curlBundleJson
+	curlCrxPackages
+	curlUsersJson
+
+	# This is only executed if >= AEM6
+	if [[ $AEM_VERSION == 6.* ]]; then 
+		curlGraniteQueryPerformance
+		curlIndexesJson
+	fi
+
+	cd - #go back to last dir "cd $OLDPWD"
+
+	# ZIPing Folder
+	if [ "$ZIP" = true ] ; then	
+		zip -q -r $DIRECTORY{.zip,}
+		rm -rf $DIRECTORY
+	fi
+
+	echo "-------------------------------------------"
+	echo "Information successfully collected."
+	echo "-------------------------------------------"
 fi
-
-cd - #go back to last dir "cd $OLDPWD"
-
-# ZIPing Folder
-if [ "$ZIP" = true ] ; then	
-	zip -q -r $DIRECTORY{.zip,}
-	rm -rf $DIRECTORY
-fi
-
-
-echo "-------------------------------------------"
-echo "Information successfully collected."
-echo "-------------------------------------------"
-
