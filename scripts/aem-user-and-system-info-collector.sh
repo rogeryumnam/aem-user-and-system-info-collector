@@ -171,7 +171,7 @@ function checkTimeout ()  {
 	echo "------------------------"
 	echo "Checking for server timeout (set timeout: $TIMEOUT)"
 	echo "------------------------"
-	CURL_STATUS=$(curl -u $USER:$PASS -s -w %{http_code} --connect-timeout $TIMEOUT --output /dev/null $SERVERURL"/system/console/vmstat")
+	CURL_STATUS=$(curl -u $USER:$PASS -s -w %{http_code} --connect-timeout $TIMEOUT -o /dev/null $SERVERURL"/system/console/vmstat")
 }
 
 function countdown () {
@@ -335,12 +335,12 @@ if [ "$FLG_C" = "TRUE" ]; then
 		echo "Password : $password"
 		echo "-----------------------------------------------"
 		echo "Recursively executing: "
-		echo "$PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE -u $server_url -u $username -p $password -a $server_url -t $TIMEOUT."
+		echo "$PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE -t $TIMEOUT -u $server_url -u $username -p $password -a $server_url."
 		echo "-----------------------------------------------"
 		countdown 5
 		
 		# Recursively calling this script with Single Server parameters
-		($PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE -u $username -p $password -d $servername -a $server_url -t $TIMEOUT)
+		($PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE -t $TIMEOUT -u $username -p $password -d $servername -a $server_url )
 		
 		((LINE++))
 	done
@@ -364,7 +364,6 @@ fi
 mkdir -p $DIRECTORY
 cd $DIRECTORY
 
-
 checkTimeout
 
 if [ "$CURL_STATUS" -eq "000" ] ; then
@@ -372,6 +371,7 @@ if [ "$CURL_STATUS" -eq "000" ] ; then
 	echo "> Server did not respond within $TIMEOUT seconds. Please check if '$SERVERURL' is available."
 	echo ""
 	printf "> Continuing ..."
+	touch "server_timed_out_$TIMEOUT_sec.txt"
 	countdown 5
 else
 
