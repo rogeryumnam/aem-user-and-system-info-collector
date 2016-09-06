@@ -8,7 +8,8 @@
 # Edited by Robert Wunsch  wunsch@adobe.com
 #
 ## Version 
-#    0.1 : first reelase
+# 	v1.1 (6-Sep-16) : add timeout parameter and default timeout check 
+#   v1.0 (1-Sep-16): first release
 # 
 # Sample Usage:
 # -------------
