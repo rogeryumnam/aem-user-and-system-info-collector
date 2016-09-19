@@ -8,7 +8,8 @@
 # Edited by Robert Wunsch  wunsch@adobe.com
 #
 ## Version 
-# 	v1.1 (6-Sep-16) : add timeout parameter and default timeout check 
+#   v1.2 (19-Sep-16): rdeduce user.json query - nodedepth to "2" -due to server returning massive amounts of "notification entries" in the user-node
+# 	v1.1 (6-Sep-16): add timeout parameter and default timeout check 
 #   v1.0 (1-Sep-16): first release
 # 
 # Sample Usage:
@@ -92,7 +93,7 @@ function curlConfigurationStatus(){
 		echo "	-J : User File-Name used on Server"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -O -J -k $CURL_NON_VERBOSE $SERVERURL/system/console/status-slinglogs/configuration-status.zip
+	curl -u $USER:$PASS -O -J -k $CURL_NON_VERBOSE $SERVERURL"/system/console/status-slinglogs/configuration-status.zip"
 }
 
 # Collecting "bundles.json" for use in tools from http://www.aemstuff.com/ -> Tools
@@ -107,7 +108,7 @@ function curlBundleJson(){
 		echo "	-J : User File-Name used on Server"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -O -J -k $CURL_NON_VERBOSE $SERVERURL/system/console/bundles.json
+	curl -u $USER:$PASS -O -J -k $CURL_NON_VERBOSE $SERVERURL"/system/console/bundles.json"
 }
 
 # Collecting "package_list.xml" for use in CQ Package Analyzer (http://sj1slm902.corp.adobe.com/)
@@ -121,7 +122,7 @@ function curlCrxPackages(){
 		echo "	-o : Download directory"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -k -o package_list.xml  $CURL_NON_VERBOSE $SERVERURL/crx/packmgr/service.jsp?cmd=ls
+	curl -u $USER:$PASS -k -o package_list.xml  $CURL_NON_VERBOSE $SERVERURL"/crx/packmgr/service.jsp?cmd=ls"
 }
 
 
@@ -136,7 +137,7 @@ function curlUsersJson(){
 		echo "	-o : Download directory"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -k -o users.json $CURL_NON_VERBOSE $SERVERURL"/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=5"
+	curl -u $USER:$PASS -k -o users.json $CURL_NON_VERBOSE $SERVERURL"/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=2"
 }
 
 # Collecting "indexes.json" to be able to check all indexes (Lucene indexes, OAK indexes)

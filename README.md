@@ -1,5 +1,9 @@
 # aem-user-and-system-info-collector
-A tool / shell-script to collect infos from several AEM instances. These infos include users to determine number of users for comliance reasons. It also includes "bundles.xml" to be used on "http://www.aemstuff.com/tools/coi.html".
+A tool / shell-script to collect infos from several AEM instances.  
+These infos include an export of all users - to determine number of users for compliance reasons.  
+It also includes "bundles.xml" to be used on "http://www.aemstuff.com/tools/coi.html" to compare bundles against the default ones in vanilla AEM.
+
+
 
 ##Usage: options
 
@@ -27,6 +31,7 @@ http://localhost:4504,AEM_5.6.1_Server-Dagobert,username,password
 http://localhost:4506,AEM_6.2_Server-Goofy,wunsch,c3$6gbH+!  
 
 ## Version 
+	* v1.2 (19-Sep-16): rdeduce user.json query - nodedepth to "2" -due to server returning massive amounts of "notification entries" in the user-node
 	* v1.1 (6-Sep-16) : add timeout parameter and default timeout check 
 	* v1.0 (1-Sep-16): first release
 
