@@ -39,25 +39,25 @@ http://localhost:4506,AEM_6.2_Server-Goofy,wunsch,c3$6gbH+!
 
 ## Changelog
 
-1c2ede2 (HEAD -> master, origin/master, origin/HEAD) update gitignore
-1476c9a v1.3 - readme update
-7704b23 (tag: v1.3) v1.3 (23-Sep-16) : Removing '-J' in CURL commands due to this not being available at a client version of CURL
-b9c5e39 (tag: v1.2) reduce user.json query - nodedepth to '2' -due to server returning massive amounts of 'notification entries' in the user-node
-13b1925 add timeout parameter and default timeout check - tag: v1.1.0
-9724893 (tag: v1.1.0) small documentation adjustment: '-t 10' moved.
-825f7e2 add a timeout file to server-folder with timeout.
-f2d3f6f add timeout check and timeout parameter.
-f56ada0  add zip parameter. add one more server in example CSV.
-f746044 add zip-ing of files. change read functionality for CSV from 'more' to 'grep' due to last line issues.
-0b62f3f add zip-ing of files. change read functionality for CSV from 'more' to 'grep' due to last line issues.
-80d7ced correct error in Readme.md
-b74f81c correct error in Readme.md
-dab2766 correct error in Readme.md
-b771fdc ad multi-server collection functionality. add sample CSV list.
-397ddc4 dermine AEM version and use to execute functions according to AEM version
-aac60cd dermine AEM version and use to execute functions according to AEM version
-5172aa7 add curl for bundles.json. add curl for users.json
-d3383fd add description to MD-File.
-133e87e first commit. Add first flags and curl command.
-1fad167 Initial commit
+1c2ede2 (HEAD -> master, origin/master, origin/HEAD) update gitignore  
+1476c9a v1.3 - readme update  
+7704b23 (tag: v1.3) v1.3 (23-Sep-16) : Removing '-J' in CURL commands due to this not being available at a client version of CURL  
+b9c5e39 (tag: v1.2) reduce user.json query - nodedepth to '2' -due to server returning massive amounts of 'notification entries' in the user-node  
+13b1925 add timeout parameter and default timeout check - tag: v1.1.0  
+9724893 (tag: v1.1.0) small documentation adjustment: '-t 10' moved.  
+825f7e2 add a timeout file to server-folder with timeout.  
+f2d3f6f add timeout check and timeout parameter.  
+f56ada0  add zip parameter. add one more server in example CSV.  
+f746044 add zip-ing of files. change read functionality for CSV from 'more' to 'grep' due to last line issues.  
+0b62f3f add zip-ing of files. change read functionality for CSV from 'more' to 'grep' due to last line issues.  
+80d7ced correct error in Readme.md  
+b74f81c correct error in Readme.md  
+dab2766 correct error in Readme.md  
+b771fdc ad multi-server collection functionality. add sample CSV list.  
+397ddc4 dermine AEM version and use to execute functions according to AEM version  
+aac60cd dermine AEM version and use to execute functions according to AEM version  
+5172aa7 add curl for bundles.json. add curl for users.json  
+d3383fd add description to MD-File.  
+133e87e first commit. Add first flags and curl command.  
+1fad167 Initial commit  
 
