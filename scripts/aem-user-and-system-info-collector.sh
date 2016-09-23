@@ -1,13 +1,14 @@
 #!/bin/bash
 
 #######################################################################################
-# version 0.1
+# version 1.3
 #
-# Revised at 2016/09/01
+# Revised at 2016/09/23
 #
 # Edited by Robert Wunsch  wunsch@adobe.com
 #
 ## Version 
+#   v1.3 (23-Sep-16) : Removing '-J' in CURL commands due to this not being available at a client version of CURL
 #   v1.2 (19-Sep-16): rdeduce user.json query - nodedepth to "2" -due to server returning massive amounts of "notification entries" in the user-node
 # 	v1.1 (6-Sep-16): add timeout parameter and default timeout check 
 #   v1.0 (1-Sep-16): first release
@@ -89,11 +90,13 @@ function curlConfigurationStatus(){
 	if [ "$VERBOSE" = true ] ; then		
 		echo "executing: "
 		echo "	curl -u $USER:$PASSWORD -O -J -k $SERVERURL/system/console/status-slinglogs/configuration-status.zip"
-		echo "	-O : Download"
-		echo "	-J : User File-Name used on Server"
+		#echo "	-O : Download"
+		#echo "	-J : User File-Name used on Server"
+		echo "	-s : Does not output error messages"
+		echo "	-o : Download directory"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -O -J -k $CURL_NON_VERBOSE $SERVERURL"/system/console/status-slinglogs/configuration-status.zip"
+	curl -u $USER:$PASS -s -k -o "configuration-status.zip" $CURL_NON_VERBOSE $SERVERURL"/system/console/status-slinglogs/configuration-status.zip"
 }
 
 # Collecting "bundles.json" for use in tools from http://www.aemstuff.com/ -> Tools
@@ -104,11 +107,13 @@ function curlBundleJson(){
 	if [ "$VERBOSE" = true ] ; then
 		echo "executing: "
 		echo "	curl -u $USER:$PASSWORD -O -J -k $SERVERURL/system/console/bundles.json"
-		echo "	-O : Download"
-		echo "	-J : User File-Name used on Server"
+		#echo "	-O : Download"
+		#echo "	-J : User File-Name used on Server"
+		echo "	-s : Does not output error messages"
+		echo "	-o : Download directory"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -O -J -k $CURL_NON_VERBOSE $SERVERURL"/system/console/bundles.json"
+	curl -u $USER:$PASS -s -k -o "bundles.json" $CURL_NON_VERBOSE $SERVERURL"/system/console/bundles.json"
 }
 
 # Collecting "package_list.xml" for use in CQ Package Analyzer (http://sj1slm902.corp.adobe.com/)
@@ -118,11 +123,12 @@ function curlCrxPackages(){
 	echo "-------------------------"
 	if [ "$VERBOSE" = true ] ; then
 		echo "executing: "
-		echo "	curl -u $USER:$PASSWORD -k -o $DIRECTORY/package_list.xml $SERVERURL/crx/packmgr/service.jsp?cmd=ls"
+		echo "	curl -u $USER:$PASSWORD -k -o package_list.xml $SERVERURL/crx/packmgr/service.jsp?cmd=ls"
+		echo "	-s : Does not output error messages"
 		echo "	-o : Download directory"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -k -o package_list.xml  $CURL_NON_VERBOSE $SERVERURL"/crx/packmgr/service.jsp?cmd=ls"
+	curl -u $USER:$PASS -s -k -o "package_list.xml"  $CURL_NON_VERBOSE $SERVERURL"/crx/packmgr/service.jsp?cmd=ls"
 }
 
 
@@ -133,11 +139,12 @@ function curlUsersJson(){
 	echo "-----------------------"
 	if [ "$VERBOSE" = true ] ; then
 		echo "executing: "
-		echo "	curl -u $USER:$PASSWORD -k -o $DIRECTORY/users.json $SERVERURL/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=5"
+		echo "	curl -u $USER:$PASSWORD -k -o users.json $SERVERURL/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=2"
+		echo "	-s : Does not output error messages"
 		echo "	-o : Download directory"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -k -o users.json $CURL_NON_VERBOSE $SERVERURL"/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=2"
+	curl -u $USER:$PASS -s -k -o "users.json" $CURL_NON_VERBOSE $SERVERURL"/bin/querybuilder.json?property=jcr:primaryType&property.value=rep:User&p.limit=-1&p.hits=full&p.nodedepth=2"
 }
 
 # Collecting "indexes.json" to be able to check all indexes (Lucene indexes, OAK indexes)
@@ -147,11 +154,12 @@ function curlIndexesJson(){
 	echo "------------------------"
 	if [ "$VERBOSE" = true ] ; then
 		echo "executing: "
-		echo "	curl -u $USER:$PASSWORD -o -k $DIRECTORY/indexes.json $SERVERURL/oak:index.tidy.-1.json"
+		echo "	curl -u $USER:$PASSWORD -o -k indexes.json $SERVERURL/oak:index.tidy.-1.json"
+		echo "	-s : Does not output error messages"
 		echo "	-o : Download directory"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -k -o indexes.json $CURL_NON_VERBOSE $SERVERURL"/oak:index.tidy.-1.json"
+	curl -u $USER:$PASS -s -k -o "indexes.json" $CURL_NON_VERBOSE $SERVERURL"/oak:index.tidy.-1.json"
 }
 
 ### Retrive QueryPerformance Statistics (Slow Queries)
@@ -161,12 +169,12 @@ function curlGraniteQueryPerformance(){
 	echo "------------------------"
 	if [ "$VERBOSE" = true ] ; then
 		echo "executing: "
-		echo "	curl -u $USER:$PASSWORD -s -o -k  $DIRECTORY/graniteQueryPerformance.txt $SERVERURL/libs/granite/operations/content/diagnosis/tool.html/_granite_queryperformance"
+		echo "	curl -u $USER:$PASSWORD -s -o -k  graniteQueryPerformance.txt $SERVERURL/libs/granite/operations/content/diagnosis/tool.html/_granite_queryperformance"
 		echo "	-s : Does not output error messages"
 		echo "	-o : Download directory"
 		echo "	-k : allow insecure SSL connections"
 	fi
-	curl -u $USER:$PASS -s -k -o graniteQueryPerformance.html $CURL_NON_VERBOSE $SERVERURL"/libs/granite/operations/content/diagnosis/tool.html/_granite_queryperformance" 
+	curl -u $USER:$PASS -s -k -o "graniteQueryPerformance.html" $CURL_NON_VERBOSE $SERVERURL"/libs/granite/operations/content/diagnosis/tool.html/_granite_queryperformance" 
 }
 
 function checkTimeout ()  {
