@@ -31,7 +31,8 @@ http://localhost:4504,AEM_5.6.1_Server-Dagobert,username,password
 http://localhost:4506,AEM_6.2_Server-Goofy,wunsch,c3$6gbH+!  
 
 ## Version 
-	* v1.2 (19-Sep-16): rdeduce user.json query - nodedepth to "2" -due to server returning massive amounts of "notification entries" in the user-node
+	* v1.3 (23-Sep-16) : Removing '-J' in CURL commands due to this not being available at a client version of CURL
+	* v1.2 (19-Sep-16): reduce user.json query - nodedepth to "2" -due to server returning massive amounts of "notification entries" in the user-node
 	* v1.1 (6-Sep-16) : add timeout parameter and default timeout check 
 	* v1.0 (1-Sep-16): first release
 
