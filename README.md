@@ -16,6 +16,7 @@ It also includes "bundles.xml" to be used on "http://www.aemstuff.com/tools/coi.
 -z : ZIP output (files and folders) 
 -n : only query users and creates 'all_users.csv' in folder 'users' 
 
+
 ##Sample Usage:
 
 ONE SERVER:  
@@ -27,11 +28,13 @@ MULTIPLE SERVER:
 MULTIPLE SERVER - USERS ONLY: 
 ./aem-user-and-system-info-collector.sh  -n -v -z -t 10 -c example-list-of-servers.csv -d 'info_all_servers'  
 
+
 ##CSV File - Content
 
 http://localhost:4502,AEM_6.1_Server-Donald,admin,admin  
 http://localhost:4504,AEM_5.6.1_Server-Dagobert,username,password  
 http://localhost:4506,AEM_6.2_Server-Goofy,wunsch,c3$6gbH+!  
+
 
 ## Version 
 	* v1.4 (24-Oct-16) : Adding the parameter 'n', which only queries user and created a CSV and XLS file from all servers combined
