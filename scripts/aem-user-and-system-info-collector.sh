@@ -1,13 +1,14 @@
 #!/bin/bash
 
 #######################################################################################
-# version 1.3
+# version 1.4
 #
-# Revised at 2016/09/23
+# Revised at 2016/10/24
 #
 # Edited by Robert Wunsch  wunsch@adobe.com
 #
 ## Version 
+#   v1.4 (24-Oct-16) : Adding the parameter 'n', which only queries user and created a CSV and XLS file from all servers combined
 #   v1.3 (23-Sep-16) : Removing '-J' in CURL commands due to this not being available at a client version of CURL
 #   v1.2 (19-Sep-16): rdeduce user.json query - nodedepth to "2" -due to server returning massive amounts of "notification entries" in the user-node
 # 	v1.1 (6-Sep-16): add timeout parameter and default timeout check 
@@ -19,10 +20,11 @@
 # ./aem-user-and-system-info-collector.sh  -v -z -t 10 -u admin -p admin -a http://localhost:4502 
 # MULTIPLE SERVER:
 # ./aem-user-and-system-info-collector.sh  -v -z -t 10 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
+# MULTIPLE SERVER - USERS ONLY:
+# ./aem-user-and-system-info-collector.sh  -n -v -z -t 10 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
 #
 # ToDo:
 # -------------
-# add CURL option "-connect-timeout
 # 
 #
 # Credits:
@@ -42,6 +44,7 @@ function usage() {
 	echo "-t : Connection Timeout (default 30sec)" 1>&2
 	echo "-v : more verbose output" 1>&2
 	echo "-z : zip output" 1>&2
+	echo "-n : only query users and creates 'all_users.csv' in folder 'users'"
 	echo ""
 	echo "---------------------"
 	echo "Sample Usage: "
@@ -177,6 +180,67 @@ function curlGraniteQueryPerformance(){
 	curl -u $USER:$PASS -s -k -o "graniteQueryPerformance.html" $CURL_NON_VERBOSE $SERVERURL"/libs/granite/operations/content/diagnosis/tool.html/_granite_queryperformance" 
 }
 
+### Iterate through all folders, find "users.json", copy to "users" folder, rename to folder/server-name
+function getAllUserJsonAndStoreToOneFolder(){
+	USERS_FOLDER='users'
+	USERS_PREFIX='users_'
+	
+	echo "------------------------"
+	echo "Collecting all 'users.json' and copy to 'users' folder. "
+	echo "Server name will become the filename."
+	echo "------------------------"	
+	## Create folder named 'users' underneath the folder defined in parameter '-d'
+	mkdir  -p "${PWD_ME}/${DIRECTORY}/${USERS_FOLDER}"
+	JSON_COUNT=1
+	find "`pwd`" -type d -name '*.*' -print0 | while IFS= read -r -d '' CUR_FOLDER; do
+		cd "$CUR_FOLDER"
+		DIR_NAME=${PWD##*/} 
+		for JSON in users.json; do	   
+		   cp "$JSON" "${PWD_ME}/${DIRECTORY}/${USERS_FOLDER}/${USERS_PREFIX}${DIR_NAME}.json"
+		done
+		echo "${JSON_COUNT}: 'users.json' found in	'${DIR_NAME}'"
+		((JSON_COUNT++))
+	done
+	cd $PWD_ME
+
+}
+
+### Convert and combine all "users.json"-files of all servers into CSV-files
+function createUserCsvFromJsons(){
+	USERS_FOLDER='users'
+	USER_FILE_NAME='all_users'
+	
+	echo "------------------------"
+	echo "Creating CSV files 'server-name'.csv from 'serve-name'.json. "
+	echo "Joining all CSV in a file '${USER_FILE_NAME}.csv'."
+	echo "------------------------"	
+
+	cd "${PWD_ME}/${DIRECTORY}/${USERS_FOLDER}"
+	
+	echo '"Server Name","rep:principalName","givenName","familyName","email","country","region","organization","jcr:created"' > "${USER_FILE_NAME}.csv"
+	
+	for JSON in *.json; do
+		SERVER_NAME=$(echo "${JSON%.*}" | sed -e 's/^users_//')
+		echo "Creating ${SERVER_NAME}.csv"
+		jq -r '.hits | map([."rep:principalName", .profile.givenName, .profile.familyName, .profile.email, .profile.country, .profile.region, .profile.organization , .profile."jcr:created"] | @csv) | join("\n")' $JSON > "${SERVER_NAME}.csv"
+		sed "s/^/\"${SERVER_NAME}\",/" "${SERVER_NAME}.csv" >> "${USER_FILE_NAME}.csv"
+		rm "${SERVER_NAME}.csv"
+		#rm $JSON
+	done
+	
+	# Create fake Excel file which opens correctly in Excel using the Excel "sep=," command
+	echo "sep=," > "${USER_FILE_NAME}.xls"
+	cat "${USER_FILE_NAME}.csv" >> "${USER_FILE_NAME}.xls"
+	
+	echo "------------------------"
+	echo "Created  CSV file '${USER_FILE_NAME}.csv'."
+	echo "------------------------"	
+
+	
+	cd $PWD_ME
+
+}
+
 function checkTimeout ()  {
 	echo "------------------------"
 	echo "Checking for server timeout (set timeout: $TIMEOUT)"
@@ -208,7 +272,7 @@ function countdown () {
 clear
 
 # --------------Get Parameters ---------------------------
-while getopts u:p:a:c:d:t:vz OPT
+while getopts u:p:a:c:d:t:vzn OPT
 
 do
   case $OPT in
@@ -220,11 +284,16 @@ do
 	"t" ) FLG_T="TRUE"  ; VALUE_T="$OPTARG" ;;
 	"v" ) FLG_V="TRUE"  ;;
 	"z" ) FLG_Z="TRUE"  ;;
+	"n" ) FLG_N="TRUE"  ;;
 	  * ) usage exit 1 ;;   
   esac
 done
 
 # ------------Check command-line parameters -----------
+echo "----------------------------------"
+echo "Check flags:"
+echo "----------------------------------"
+
 if [ "$FLG_U" = "TRUE" ]; then
   USER=$VALUE_U
 fi
@@ -275,19 +344,29 @@ else
   echo "OUTPUT: Do NOT ZIP files and folders."
 fi
 
+if [ "$FLG_N" = "TRUE" ]; then
+  ONLY_USERS=true
+  SCRIPT_ONLY_USERS='-n'
+  echo "OUTPUT: Only query users."
+fi
+
+echo " "
+
 # ------------ Software checks -------------------
 # Check if necessary software is installed and available
-
+echo "----------------------------------"
+echo "Check installed sotfware:"
+echo "----------------------------------"
 # CURL
 if hash curl 2>/dev/null; then
-	echo "CURL installed"
+	echo "CURL is installed"
 else
 	echo "You need to install CURL to continue"
 	exit 1
 fi
 # SED
 if hash sed 2>/dev/null; then
-	echo "SED installed"
+	echo "SED is installed"
 else
 	echo "You need to install SED to continue"
 	exit 1
@@ -295,7 +374,7 @@ fi
 # ZIP
 if [ "$ZIP" = true ] ; then
 	if hash zip 2>/dev/null ; then
-		echo "ZIP installed"
+		echo "ZIP is installed"
 	else
 		echo "You need to install ZIP to continue"
 		exit 1
@@ -303,20 +382,40 @@ if [ "$ZIP" = true ] ; then
 fi
 # READ
 if hash read 2>/dev/null; then
-	echo "READ installed"
+	echo "READ is installed"
 else
 	echo "You need to install READ to continue"
 	exit 1
 fi
 # GREP
 if hash grep 2>/dev/null; then
-	echo "GREP installed"
+	echo "GREP is installed"
 else
 	echo "You need to install GREP to continue"
 	exit 1
 fi
-echo "All necessary software installed."
+# ZIP
+if [ "$ONLY_USERS" = true ] ; then
+	if hash sed 2>/dev/null ; then
+		echo "SED is installed"
+	else
+		echo "You need to install SED to continue"
+		exit 1
+	fi
+	
+	if hash jq 2>/dev/null ; then
+		echo "JQ is installed"
+	else
+		echo "You need to install JQ to continue"
+		exit 1
+	fi
+fi
 echo "	"
+echo "----------------------------------"
+echo "All necessary software installed."
+echo "----------------------------------"
+echo "	"
+countdown 3
 
 # ------------- MULTI SERVER --------------------------------
 # - Iterate through CSV and call this script recursively ----
@@ -345,17 +444,25 @@ if [ "$FLG_C" = "TRUE" ]; then
 		echo "Password : $password"
 		echo "-----------------------------------------------"
 		echo "Recursively executing: "
-		echo "$PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE -t $TIMEOUT -u $server_url -u $username -p $password -a $server_url."
+		echo "$PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE $SCRIPT_ONLY_USERS -t $TIMEOUT -u $server_url -u $username -p $password -a $server_url."
 		echo "-----------------------------------------------"
-		countdown 5
+		countdown 3
 		
 		# Recursively calling this script with Single Server parameters
-		($PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE -t $TIMEOUT -u $username -p $password -d $servername -a $server_url )
+		($PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE $SCRIPT_ONLY_USERS -t $TIMEOUT -u $username -p $password -d $servername -a $server_url )
+		
+		countdown 3
 		
 		((LINE++))
 	done
 	
+	# return to uppermost folder
 	cd $PWD_ME
+	
+	# collect all 'users.json' and copy to users-folder
+	clear
+	getAllUserJsonAndStoreToOneFolder
+	createUserCsvFromJsons
 	
 	# ZIPing Folder
 	if [ "$ZIP" = true ] ; then	
@@ -382,23 +489,27 @@ if [ "$CURL_STATUS" -eq "000" ] ; then
 	echo ""
 	printf "> Continuing ..."
 	touch "server_timed_out_$TIMEOUT_sec.txt"
-	countdown 5
 else
 
 	# This returns AEM_VERSION
 	getAemVersion
 
-	# This collects server information
-	curlConfigurationStatus
-	curlBundleJson
-	curlCrxPackages
-	curlUsersJson
-
-	# This is only executed if >= AEM6
-	if [[ $AEM_VERSION == 6.* ]]; then 
-		curlGraniteQueryPerformance
-		curlIndexesJson
+	if [ "$ONLY_USERS" = true ] ; then	
+		curlUsersJson
+	else
+		# This is only executed if >= AEM6
+		if [[ $AEM_VERSION == 6.* ]]; then 
+			curlGraniteQueryPerformance
+			curlIndexesJson
+		fi
+		
+		# This collects server information
+		curlConfigurationStatus
+		curlBundleJson
+		curlCrxPackages
+		curlUsersJson
 	fi
+	
 
 	cd - #go back to last dir "cd $OLDPWD"
 
