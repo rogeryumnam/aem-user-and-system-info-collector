@@ -13,7 +13,7 @@ It also includes "bundles.xml" to be used on "http://www.aemstuff.com/tools/coi.
 -d : destination folder/directory (default 'server-info'-folder)  
 -t : Connection Timeout (default 30sec)  
 -v : more verbose output  
--z : ZIP output (files and folders) 
+-z : ZIP output (files and folders)  
 -n : only query users and creates 'all_users.csv' in folder 'users' 
 
 
@@ -25,7 +25,7 @@ ONE SERVER:
 MULTIPLE SERVER:  
 ./aem-user-and-system-info-collector.sh  -v -z -t 10 -c example-list-of-servers.csv -d 'info_all_servers'  
 
-MULTIPLE SERVER - USERS ONLY: 
+MULTIPLE SERVER - USERS ONLY:  
 ./aem-user-and-system-info-collector.sh  -n -v -z -t 10 -c example-list-of-servers.csv -d 'info_all_servers'  
 
 
