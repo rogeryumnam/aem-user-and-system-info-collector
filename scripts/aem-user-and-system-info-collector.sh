@@ -395,14 +395,7 @@ else
 	exit 1
 fi
 # ZIP
-if [ "$ONLY_USERS" = true ] ; then
-	if hash sed 2>/dev/null ; then
-		echo "SED is installed"
-	else
-		echo "You need to install SED to continue"
-		exit 1
-	fi
-	
+if [ "$ONLY_USERS" = true ] ; then	
 	if hash jq 2>/dev/null ; then
 		echo "JQ is installed"
 	else

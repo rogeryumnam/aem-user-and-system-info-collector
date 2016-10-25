@@ -43,6 +43,14 @@ http://localhost:4506,AEM_6.2_Server-Goofy,wunsch,c3$6gbH+!
 	* v1.1 (6-Sep-16) : add timeout parameter and default timeout check 
 	* v1.0 (1-Sep-16): first release
 
+## Required Shell tools/programs  
+
+* CURL :	HTTP(S) Network client  
+* SED :		regular expressions  
+* ZIP :		Compression tool  
+* READ :	read from a file descriptor  
+* JQ :		Tool for processing JSON  (only for parameter 'n'))
+
 
 ## Changelog
 
