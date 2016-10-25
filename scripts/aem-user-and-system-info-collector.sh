@@ -455,11 +455,13 @@ if [ "$FLG_C" = "TRUE" ]; then
 	# return to uppermost folder
 	cd $PWD_ME
 	
-	# collect all 'users.json' and copy to users-folder
-	clear
-	getAllUserJsonAndStoreToOneFolder
-	createUserCsvFromJsons
-	
+	if [ "$ONLY_USERS" = true ] ; then
+		# collect all 'users.json' and copy to users-folder
+		clear
+		getAllUserJsonAndStoreToOneFolder
+		createUserCsvFromJsons
+	fi
+		
 	# ZIPing Folder
 	if [ "$ZIP" = true ] ; then	
 		zip -q -r $DIRECTORY{.zip,}
