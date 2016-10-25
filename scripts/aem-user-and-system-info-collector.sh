@@ -21,7 +21,7 @@
 # MULTIPLE SERVER:
 # ./aem-user-and-system-info-collector.sh  -v -z -t 10 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
 # MULTIPLE SERVER - USERS ONLY:
-# ./aem-user-and-system-info-collector.sh  -n -v -z -t 10 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
+# ./aem-user-and-system-info-collector.sh  -n -v -t 10 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
 #
 # ToDo:
 # -------------
@@ -54,6 +54,9 @@ function usage() {
 	echo ""
 	echo "MULTIPLE SERVER:"
 	echo "./aem-user-and-system-info-collector.sh  -v -z -t 10 -c example-list-of-servers.csv -d 'info_all_servers'" 1>&2
+	echo ""
+	echo "MULTIPLE SERVER - USERS ONLY:"
+	echo "./aem-user-and-system-info-collector.sh  -v -t 10 -c example-list-of-servers.csv -d 'info_all_servers'" 1>&2
 	echo "---------------------"
 	echo ""
 	echo "---------------------"
