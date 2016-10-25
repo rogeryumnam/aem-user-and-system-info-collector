@@ -3,6 +3,9 @@ A tool / shell-script to collect infos from several AEM instances.
 These infos include an export of all users - to determine number of users for compliance reasons.  
 It also includes "bundles.xml" to be used on "http://www.aemstuff.com/tools/coi.html" to compare bundles against the default ones in vanilla AEM.
 
+## Video (youTube)
+
+Short Intro: https://www.youtube.com/watch?v=VnZpn0vpStU  
 
 ##Usage: options
 
