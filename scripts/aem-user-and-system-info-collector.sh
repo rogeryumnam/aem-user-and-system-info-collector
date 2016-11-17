@@ -8,6 +8,7 @@
 # Edited by Robert Wunsch  wunsch@adobe.com
 #
 ## Version 
+#   v1.5 (18-Nov-16) : Added '-w' parameter for wait time. Default is 3 sec. Set "0" for fastest execution.  
 #   v1.4 (24-Oct-16) : Adding the parameter 'n', which only queries user and created a CSV and XLS file from all servers combined
 #   v1.3 (23-Sep-16) : Removing '-J' in CURL commands due to this not being available at a client version of CURL
 #   v1.2 (19-Sep-16): rdeduce user.json query - nodedepth to "2" -due to server returning massive amounts of "notification entries" in the user-node
@@ -17,11 +18,11 @@
 # Sample Usage:
 # -------------
 # ONE SERVER:
-# ./aem-user-and-system-info-collector.sh  -v -z -t 10 -u admin -p admin -a http://localhost:4502 
+# ./aem-user-and-system-info-collector.sh  -v -z -t 10 -w 0 -u admin -p admin -a http://localhost:4502 
 # MULTIPLE SERVER:
-# ./aem-user-and-system-info-collector.sh  -v -z -t 10 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
+# ./aem-user-and-system-info-collector.sh  -v -z -t 10 -w 0 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
 # MULTIPLE SERVER - USERS ONLY:
-# ./aem-user-and-system-info-collector.sh  -n -v -t 10 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
+# ./aem-user-and-system-info-collector.sh  -n -v -t 10 -w 0 -c file-containing-list-of-servers-and-credentials.csv (serverURL, username, password, serverName)
 #
 # ToDo:
 # -------------
@@ -43,6 +44,7 @@ function usage() {
 	echo "-d : destination folder/directory (default 'server-info'-folder)" 1>&2
 	echo "-t : Connection Timeout (default 30sec)" 1>&2
 	echo "-v : more verbose output" 1>&2
+	echo "-w : wait time (for reading feedback) in sec (default: 3 sec). For production set to 0"
 	echo "-z : zip output" 1>&2
 	echo "-n : only query users and creates 'all_users.csv' in folder 'users'"
 	echo ""
@@ -263,9 +265,12 @@ function countdown () {
 	printf "."
 	sleep .25
   done
-  printf " GO!"
-  echo " "
-  sleep 1
+ 
+  if [ "$WAITTIME" -ne 0 ]; then
+	 printf " GO!"
+	echo " "
+	sleep 1
+  fi
 }
 
 #---------------------------------------------------------
@@ -275,7 +280,7 @@ function countdown () {
 clear
 
 # --------------Get Parameters ---------------------------
-while getopts u:p:a:c:d:t:vzn OPT
+while getopts u:p:a:c:d:t:w:vzn OPT
 
 do
   case $OPT in
@@ -285,6 +290,7 @@ do
 	"c" ) FLG_C="TRUE"  ; VALUE_C="$OPTARG" ;;
 	"d" ) FLG_D="TRUE"  ; VALUE_D="$OPTARG" ;;
 	"t" ) FLG_T="TRUE"  ; VALUE_T="$OPTARG" ;;
+	"w" ) FLG_W="TRUE"  ; VALUE_W="$OPTARG" ;;
 	"v" ) FLG_V="TRUE"  ;;
 	"z" ) FLG_Z="TRUE"  ;;
 	"n" ) FLG_N="TRUE"  ;;
@@ -329,6 +335,14 @@ if [ "$FLG_D" = "TRUE" ]; then
   DIRECTORY=$VALUE_D
 else
   DIRECTORY="collected-info"
+fi
+
+if [ "$FLG_W" = "TRUE" ]; then
+  WAITTIME=$VALUE_W
+   echo "WAITTIME: $VALUE_W"
+else
+  WAITTIME=3
+   echo "WAITTIME: Default (3)"
 fi
 
 if [ "$FLG_V" = "TRUE" ]; then
@@ -411,7 +425,7 @@ echo "----------------------------------"
 echo "All necessary software installed."
 echo "----------------------------------"
 echo "	"
-countdown 3
+countdown $WAITTIME
 
 # ------------- MULTI SERVER --------------------------------
 # - Iterate through CSV and call this script recursively ----
@@ -442,12 +456,12 @@ if [ "$FLG_C" = "TRUE" ]; then
 		echo "Recursively executing: "
 		echo "$PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE $SCRIPT_ONLY_USERS -t $TIMEOUT -u $server_url -u $username -p $password -a $server_url."
 		echo "-----------------------------------------------"
-		countdown 3
+		countdown $WAITTIME
 		
 		# Recursively calling this script with Single Server parameters
-		($PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE $SCRIPT_ONLY_USERS -t $TIMEOUT -u $username -p $password -d $servername -a $server_url )
+		($PWD_ME/$BASENAME_ME $SCRIPT_VERBOSE $SCRIPT_ONLY_USERS -t $TIMEOUT -w $WAITTIME -u $username -p $password -d $servername -a $server_url )
 		
-		countdown 3
+		countdown $WAITTIME
 		
 		((LINE++))
 	done

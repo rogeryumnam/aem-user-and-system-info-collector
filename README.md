@@ -15,6 +15,7 @@ Short Intro: https://www.youtube.com/watch?v=VnZpn0vpStU
 -c : CSV-file: define server-url (-a), servername (-d), login(-u), password(-p)                                                                                                                                                                                          for batch collection
 -d : destination folder/directory (default 'server-info'-folder)  
 -t : Connection Timeout (default 30sec)  
+-w : wait time (for reading feedback) in sec (default: 3 sec). For production set to 0  
 -v : more verbose output  
 -z : ZIP output (files and folders)  
 -n : only query users and creates 'all_users.csv' in folder 'users' (all other information is NOT collected)
@@ -23,13 +24,13 @@ Short Intro: https://www.youtube.com/watch?v=VnZpn0vpStU
 ##Sample Usage:
 
 ONE SERVER:  
-./aem-user-and-system-info-collector.sh  -v -z -t 10 -u admin -p admin -a http://localhost:4502 -d 'info_localhost_4502'  
+./aem-user-and-system-info-collector.sh  -v -z -t 10 -w 0 -u admin -p admin -a http://localhost:4502 -d 'info_localhost_4502'  
 
 MULTIPLE SERVER:  
-./aem-user-and-system-info-collector.sh  -v -z -t 10 -c example-list-of-servers.csv -d 'info_all_servers'  
+./aem-user-and-system-info-collector.sh  -v -z -t 10 -w 0 -c example-list-of-servers.csv -d 'info_all_servers'  
 
 MULTIPLE SERVER - USERS ONLY:  
-./aem-user-and-system-info-collector.sh  -n -v -t 10 -c example-list-of-servers.csv -d 'info_all_servers'  
+./aem-user-and-system-info-collector.sh  -n -v -t 10 -w 0 -c example-list-of-servers.csv -d 'info_all_servers'  
 
 
 ##CSV File - Content
@@ -40,6 +41,7 @@ http://localhost:4506,AEM_6.2_Server-Goofy,wunsch,c3$6gbH+!
 
 
 ## Version 
+	* v1.5 (18-Nov-16) : Added '-w' parameter for wait time. Default is 3 sec. Set "0" for fastest execution.  
 	* v1.4 (24-Oct-16) : Adding the parameter 'n', which only queries user and created a CSV and XLS file from all servers combined
 	* v1.3 (23-Sep-16) : Removing '-J' in CURL commands due to this not being available at a client version of CURL
 	* v1.2 (19-Sep-16): reduce user.json query - nodedepth to "2" -due to server returning massive amounts of "notification entries" in the user-node
